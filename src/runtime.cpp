@@ -7,7 +7,7 @@ using namespace std;
 
 #include "strh.hpp"
 #include "parser.hpp"
-#include "exprtk.hpp"
+#include "lib/exprtk.hpp"
 #include "builtin.hpp"
 using namespace exprtk;
 
@@ -33,7 +33,7 @@ bool isFunction(string exp);
 bool isArithmetic(string exp);
 int executeExpression(string expression);
 
-#pragma endregion // allaj
+#pragma endregion // allaj88
 
 string getArithmeticVal(string aexpr){
     symbol_table<double> symbol_table;
