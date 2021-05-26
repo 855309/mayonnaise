@@ -7,6 +7,52 @@ using namespace std;
 #include "parser.hpp"
 #include "strh.hpp"
 
+string trimToDelimiterNonStr(string origin, char del){
+    string ext = "";
+
+    bool ins = false;
+    for(char c : origin){
+        if(c == '"'){
+            if(ins){
+                ins = false;
+            }
+            else{
+                ins = true;
+            }
+        }
+        else if(!ins){
+            if(c == del){
+                break;
+            }
+        }
+
+        ext += c;
+    }
+
+    return ext;
+}
+
+string getExceptStr(string exp){
+    string sn = "";
+    
+    bool ins = false;
+    for(char c : exp){
+        if(c == '"'){
+            if(ins){
+                ins = false;
+            }
+            else{
+                ins = true;
+            }
+        }
+        else if(!ins){
+            sn += c;
+        }
+    }
+
+    return sn;
+}
+
 bool convertBool(string exp){
     stringstream st;
     st << exp;
@@ -23,7 +69,7 @@ double todouble(string vl){
     return v;
 }
 
-vector<string> parseFunctionArgs(string exp){ // print(5, "string")
+vector<string> parseFunctionArgs(string exp){ // func(1, "alah", 47, 8 + 99)
     vector<string> srr = splitstrcount(exp, '(', 1);
     //string funcname = srr[0];
     vector<string> args;
@@ -44,6 +90,8 @@ vector<string> parseFunctionArgs(string exp){ // print(5, "string")
         }
 
         if(c == '\"'){
+            stream += c;
+
             if(parsingStr){
                 //args.push_back(stream.str());
                 parsingStr = false;
@@ -53,6 +101,8 @@ vector<string> parseFunctionArgs(string exp){ // print(5, "string")
                 parsingStr  = true;
                 continue;
             }
+
+            // LAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN
         }
         else{
             if(!parsingStr){

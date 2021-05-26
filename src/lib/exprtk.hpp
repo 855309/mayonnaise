@@ -40070,7 +40070,7 @@ namespace exprtk
 {
    namespace information
    {
-      static const char* library = "Mathematical Expression Toolkit";
+      static const char* library = "Mayonnaise Mathematical Expression Toolkit";
       static const char* version = "2.718281828459045235360287471352"
                                    "66249775724709369995957496696762"
                                    "77240766303535475945713821785251"

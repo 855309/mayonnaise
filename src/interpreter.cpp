@@ -8,9 +8,11 @@ using namespace replxx;
 
 #include "strh.hpp"
 #include "command.hpp"
+#include "file.hpp"
+#include "versioncontrol.hpp"
 
 #pragma region Interpreter Definitions
-string mayoVer = "1.0-pre.begin";
+string mayoVer = getVer();
 #pragma endregion
 
 Replxx inp;
@@ -43,28 +45,51 @@ void startInterpreter(){
     string definpstr = ">> ";
     string mulinpstr = ".. ";
     string inpstr = definpstr;
-    while (1){ // input loop
+
+    while (1){ // input loop (interpreter)
         //cout << inpstr;
         string userinp = "";
         //getline(cin, userinp);
         userinp = inp.input(inpstr);
         userinp = trim(userinp);
 
-        int code = executeExpression(userinp);
-        if(code == 1000){
-            inpstr = mulinpstr;
-        }
-        else{
-            inpstr = definpstr;
-        }
-
         if(userinp != ""){
+            int code = executeExpression(userinp);
+            if(code == 1000){
+                inpstr = mulinpstr;
+            }
+            else{
+                inpstr = definpstr;
+                if(code != 0){
+                    cerr << "Unrecognizable code block. Error code: " << code << endl;
+                }
+            }
+
             inp.history_add(userinp);
         }
     }
 }
 
-int main(){
-    startInterpreter();
+void execFile(string file){
+    vector<string> lines = ReadAllLines(file);
+    for(int li = 1; li <= lines.size(); li++){
+        string cline = trim(lines[li - 1]);
+        if(cline != ""){
+            int code = executeExpression(cline);
+            if(code != 0 && code != 1000){
+                cerr << file << ":" << li << " Unrecognizable code block. Error code: " << code << endl;
+            }
+        }
+    }
+}
+
+int main(int argc, char** argv){
+    if(argc > 1){
+        execFile(argv[1]);
+    }
+    else{
+        startInterpreter();
+    }
+
     return 0;
 }
