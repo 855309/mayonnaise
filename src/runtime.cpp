@@ -1,7 +1,7 @@
 /* 
 * @author: fikret0
 * @date:   ?/??/1945
-* @desc:   mayonnaise Allah47
+* @desc:   mayonnaise
 */
 
 #include <vector>
@@ -13,7 +13,7 @@ using namespace std; // bismillahirrahmanirrahim-u teala
 
 #include "strh.hpp"
 #include "parser.hpp"
-#include "lib/exprtk.hpp"
+#include "../lib/exprtk.hpp"
 #include "builtin.hpp"
 using namespace exprtk;
 
@@ -75,7 +75,6 @@ string getArithmeticVal(string aexpr){
 }
 
 // BELER LIBRARY YA KUSURA BAKMA
-// ANNEN IZIN VERMEDI OROSPU EVLADI
 bool getBoolVal(string exp){
     if(exp == "true"){
         return true;
@@ -102,8 +101,7 @@ string getVarVal(string name){ // YaAllahu38
         }
     }
 
-    return ""; // bi hata var amcik kodu kontrol et
-               // allaha soylerim bak carpar seni pic
+    return ""; // bi hata var
 }
 
 bool varExists(string name){
@@ -122,7 +120,7 @@ string parseAndExecuteFunction(string exp){
     string funcname = srr[0];
     vector<string> args = parseFunctionArgs(exp);
     for(int i = 0; i < args.size(); i++){
-        args[i] = getExpressionVal(args[i]); // iste kod diye buna denir orrrrrrrrrrrrrrrrrrrrrospu evladi
+        args[i] = getExpressionVal(args[i]);
         
         /*if(isArithmetic(args[i])){
             args[i] = getArithmeticVal(args[i]);
@@ -190,7 +188,7 @@ bool identifierValid(string idf){
     }
 
     for(char c : trim(idf)){
-        for(char pb : prohibitedChars){ // beler allaj iste burda
+        for(char pb : prohibitedChars){ // beler alaj iste burda
             if(pb == c){
                 return false; // au44
             }
@@ -261,11 +259,11 @@ bool isArithmetic(string exp){
     string trm = getExceptStr(trim(exp));
     for(string term : arithmeticTerms){
         if(trm.find(term) != string::npos){
-            return true; // PEZEVEEEEEEEEEEEEEEEENK PEZEVEEEEEEEEEEEEEEEENK
+            return true;
         }
     }
 
-    return false; // zaaaaaaaaaaaaa anani siktim
+    return false;
 }
 
 string getExpressionVal(string exp){
@@ -286,16 +284,14 @@ string getExpressionVal(string exp){
     return "";
 }
 
-// KES KES KES KES KES KES KES KES KES KES PCIUVVVV AMINA KODUGUMUN OGLU SENI
-// -alah
-
 bool definefunction = false;
 mfunction currentFunction;
 
-bool defineif = false; // allahdef
-bool execIf = false;   // allahif 
+bool defineif = false; // a-def
+bool execIf = false;   // a-if 
 
-char commentDel = '#'; // allahın commenti seni
+// comment delimiter
+char commentDel = '#'; 
 
 int executeExpression(string fexp){
     string expression = trim(trimToDelimiterNonStr(fexp, commentDel));
@@ -312,7 +308,7 @@ int executeExpression(string fexp){
     vector<string> spaceparts = splitstr(expression, ' ');
     vector<string> eqparts = splitstrcount(expression, '=', 1);
 
-    if(definefunction){ // bakalım allah fonksiyon sever miymiş
+    if(definefunction){
         currentFunction.code.push_back(trim(expression));
         if(spaceparts[0] == "enddef"){
             definefunction = false;
@@ -322,8 +318,7 @@ int executeExpression(string fexp){
         else{
             return 1000;
         }
-    } // sevmezmiş seni orospu evladı
-      // bilmeden yazma amına kürekle vururum
+    }
 
     if(defineif){
         if(spaceparts[0] == "endif"){
@@ -336,7 +331,7 @@ int executeExpression(string fexp){
             // karizmanın öz evladı
             // QlasQlas1000            
         }
-    } // TAŞŞAAAAAAAAAAAAAAAJ
+    }
 
     if(spaceparts[0] == "vars"){
         for(mvariable v : variables){
@@ -381,10 +376,8 @@ int executeExpression(string fexp){
         returnval = getExpressionVal(wf);
     }
     else{
-        return 1; // beler Allahu-juan gitti
-                  // sabah kahvaltıda yedim ya
-                  // kusura bakma
+        return 1;
     }
     
-    return 0; // işte buraya geldiysen ağır yıkıksın orospu evladı bide gelip kodu okumaya mı çalıştın cidden vasıfsız pezevenk seni git başka birşey yap siktir git burdan
+    return 0;
 }

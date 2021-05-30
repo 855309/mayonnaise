@@ -69,7 +69,7 @@ double todouble(string vl){
     return v;
 }
 
-vector<string> parseFunctionArgs(string exp){ // func(1, "alah", 47, 8 + 99)
+vector<string> parseFunctionArgs(string exp){ // func(1, "a", 47, 8 + 99)
     vector<string> srr = splitstrcount(exp, '(', 1);
     //string funcname = srr[0];
     vector<string> args;
