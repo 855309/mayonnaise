@@ -22,6 +22,11 @@ struct mvariable{
     string value;
 };
 
+struct forblock{
+    string exp;
+    vector<string> code;
+};
+
 struct ifblock{
     vector<string> code;
 };
@@ -287,11 +292,22 @@ string getExpressionVal(string exp){
 bool definefunction = false;
 mfunction currentFunction;
 
+bool defineFor = false;   // a-for
+forblock currentFor;
+
 bool defineif = false; // a-def
 bool execIf = false;   // a-if 
 
 // comment delimiter
 char commentDel = '#'; 
+
+void execFor(forblock block){
+    while(getBoolVal(block.exp)){
+        for(string cd : block.code){
+            executeExpression(cd);
+        }
+    }
+}
 
 int executeExpression(string fexp){
     string expression = trim(trimToDelimiterNonStr(fexp, commentDel));
@@ -309,13 +325,25 @@ int executeExpression(string fexp){
     vector<string> eqparts = splitstrcount(expression, '=', 1);
 
     if(definefunction){
-        currentFunction.code.push_back(trim(expression));
+        currentFunction.code.push_back(expression);
         if(spaceparts[0] == "enddef"){
             definefunction = false;
             functions.push_back(currentFunction);
             return 0;
         }
         else{
+            return 1000;
+        }
+    }
+
+    if(defineFor){
+        if(spaceparts[0] == "endfor"){
+            execFor(currentFor);
+            defineFor = false;
+            return 0;
+        }
+        else{
+            currentFor.code.push_back(expression);
             return 1000;
         }
     }
@@ -368,6 +396,13 @@ int executeExpression(string fexp){
             execIf = false;
         }
 
+        return 1000;
+    }
+    else if(spaceparts[0] == "for"){
+        defineFor = true;
+        vector<string> oneSpaceParts = splitstrcount(expression, ' ', 1);
+
+        currentFor.exp = oneSpaceParts[1];
         return 1000;
     }
     else if(spaceparts[0] == "return"){
