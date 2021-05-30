@@ -303,6 +303,7 @@ char commentDel = '#';
 
 void execFor(forblock block){
     while(getBoolVal(block.exp)){
+        //cout << getBoolVal(block.exp) << endl;
         for(string cd : block.code){
             executeExpression(cd);
         }
@@ -338,8 +339,8 @@ int executeExpression(string fexp){
 
     if(defineFor){
         if(spaceparts[0] == "endfor"){
-            execFor(currentFor);
             defineFor = false;
+            execFor(currentFor);
             return 0;
         }
         else{
