@@ -75,17 +75,27 @@ vector<string> parseFunctionArgs(string exp){ // func(1, "a", 47, 8 + 99)
     vector<string> args;
     string stream;
     bool parsingStr = false;
-    for(char c : srr[1]){
+
+    int functionQueue = 0;
+
+    for(char c : srr[1]){ // abc(bbbbb("c"), 2)
         if(!parsingStr){
-            if(c == ','){
+            if(c == ',' && functionQueue == 0){
                 args.push_back(stream);
                 stream = "";
                 continue;
             }
             else if(c == ')'){
-                args.push_back(stream);
-                stream = "";
-                break;
+                if(functionQueue == 0){
+                    args.push_back(stream);
+                    stream = "";
+                    break;
+                }
+                else{
+                    functionQueue--;
+                    stream += c;
+                    continue;
+                }
             }
         }
 
@@ -106,6 +116,10 @@ vector<string> parseFunctionArgs(string exp){ // func(1, "a", 47, 8 + 99)
         }
         else{
             if(!parsingStr){
+                if(c == '('){
+                    functionQueue++;
+                }
+                
                 if(c != ' '){
                     stream += c;
                 }

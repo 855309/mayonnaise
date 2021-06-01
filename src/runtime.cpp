@@ -9,7 +9,7 @@
 #include <iostream>
 #include <map>
 #include <queue>
-using namespace std; // bismillahirrahmanirrahim-u teala
+using namespace std;
 
 #include "strh.hpp"
 #include "parser.hpp"
@@ -27,7 +27,19 @@ struct forblock{
     vector<string> code;
 };
 
+struct rangeobj{
+    int start;
+    int end;
+};
+
+struct rangeloopblock{
+    rangeobj range;
+    string var;
+    vector<string> code;
+};
+
 struct ifblock{
+    string exp;
     vector<string> code;
 };
 
@@ -157,7 +169,10 @@ string parseAndExecuteFunction(string exp){
     for(mfunction fn : functions){
         if(fn.name == funcname){
             for(string cd : fn.code){
-                executeExpression(cd);
+                int code = executeExpression(cd);
+                if(code == 960){
+                    break;
+                }
             }
             break;
         }
@@ -289,14 +304,29 @@ string getExpressionVal(string exp){
     return "";
 }
 
-bool definefunction = false;
+vector<string> pArgsVal(string exp){
+    vector<string> args = parseFunctionArgs(exp);
+    for(int i = 0; i < args.size(); i++){
+        args[i] = getExpressionVal(args[i]);
+    }
+
+    return args;
+}
+
+bool definefunction = false; // a-def
 mfunction currentFunction;
 
 bool defineFor = false;   // a-for
 forblock currentFor;
+int forQueue = 0;
 
-bool defineif = false; // a-def
-bool execIf = false;   // a-if 
+bool defineif = false; // a-if
+ifblock currentIf;
+int ifQueue = 0;
+
+bool defineRangeLoop = false;
+rangeloopblock currentRangeLoop;
+int rangeQueue = 0;
 
 // comment delimiter
 char commentDel = '#'; 
@@ -304,6 +334,40 @@ char commentDel = '#';
 void execFor(forblock block){
     while(getBoolVal(block.exp)){
         //cout << getBoolVal(block.exp) << endl;
+        for(string cd : block.code){
+            executeExpression(cd);
+        }
+    }
+}
+
+void execIf(ifblock block){
+    if(getBoolVal(block.exp)){
+        for(string cd : block.code){
+            executeExpression(cd);
+        }
+    }
+}
+
+rangeobj parseRange(string exp){
+    rangeobj g;
+    vector<string> args = pArgsVal(exp);
+
+    g.start = stoi(args[0]);
+    g.end = stoi(args[1]);
+
+    return g;
+}
+
+void execRangeLoop(rangeloopblock block){
+    //cout << block.range.start << " " << block.range.end << " " << block.var << endl;
+
+    /*for(string s : block.code){
+        cout << s << endl;
+    }*/
+
+    for(int index = block.range.start; index < block.range.end; index++){
+        assignVar(block.var, to_string(index));
+        //cout << "breakpoint" << endl;
         for(string cd : block.code){
             executeExpression(cd);
         }
@@ -339,11 +403,30 @@ int executeExpression(string fexp){
 
     if(defineFor){
         if(spaceparts[0] == "endfor"){
-            defineFor = false;
-            execFor(currentFor);
-            return 0;
+            if(forQueue != 0){
+                forQueue--;
+                currentFor.code.push_back(expression);
+                return 1000;
+            }
+            else{
+                defineFor = false;
+                /*for(string s : currentFor.code){
+                    cout << s << endl;
+                }*/
+                forblock cb = currentFor;
+
+                currentFor.code.clear();
+                currentFor.exp.clear();
+
+                execFor(cb);
+                return 0;
+            }
         }
         else{
+            if(spaceparts[0] == "for"){
+                forQueue++;
+            }
+
             currentFor.code.push_back(expression);
             return 1000;
         }
@@ -351,14 +434,62 @@ int executeExpression(string fexp){
 
     if(defineif){
         if(spaceparts[0] == "endif"){
-            defineif = false;
-            return 0;
-        }
+            if(ifQueue != 0){
+                ifQueue--;
+                currentIf.code.push_back(expression);
+                return 1000;
+            }
+            else{
+                defineif = false;
 
-        if(!execIf){
-            return 1000; // JAAAAAAAAAAAAAAJ
-            // karizmanın öz evladı
-            // QlasQlas1000            
+                ifblock cb = currentIf;
+
+                currentIf.code.clear();
+                currentIf.exp.clear();
+
+                execIf(cb);
+                return 0;
+            }
+        }
+        else{
+            if(spaceparts[0] == "if"){
+                ifQueue++;
+            }
+
+            currentIf.code.push_back(expression);
+            return 1000;
+        }
+    }
+
+    if(defineRangeLoop){
+        if(spaceparts[0] == "endrange"){
+            if(rangeQueue != 0){
+                rangeQueue--;
+                currentRangeLoop.code.push_back(expression);
+                return 1000;
+            }
+            else{
+                defineRangeLoop = false;
+
+                rangeloopblock cb = currentRangeLoop;
+
+                currentRangeLoop.code.clear();
+                currentRangeLoop.var.clear();
+
+                currentRangeLoop.range.start = 0;
+                currentRangeLoop.range.end = 0;
+
+                execRangeLoop(cb);
+                return 0;
+            }
+        }
+        else{
+            if(spaceparts[0] == "rangeloop"){
+                rangeQueue++;
+            }
+
+            currentRangeLoop.code.push_back(expression);
+            return 1000;
         }
     }
 
@@ -390,13 +521,7 @@ int executeExpression(string fexp){
         defineif = true;
         vector<string> oneSpaceParts = splitstrcount(expression, ' ', 1);
 
-        if(getBoolVal(oneSpaceParts[1])){
-            execIf = true;
-        }
-        else{
-            execIf = false;
-        }
-
+        currentIf.exp = oneSpaceParts[1];
         return 1000;
     }
     else if(spaceparts[0] == "for"){
@@ -406,10 +531,21 @@ int executeExpression(string fexp){
         currentFor.exp = oneSpaceParts[1];
         return 1000;
     }
+    else if(spaceparts[0] == "rangeloop"){
+        defineRangeLoop = true;
+        vector<string> rangeParts = splitstrcount(expression, ' ', 3); // rangeloop <var> in <range>
+        
+        currentRangeLoop.var = rangeParts[1];
+        currentRangeLoop.range = parseRange(rangeParts[3]);
+        
+        return 1000;
+    }
     else if(spaceparts[0] == "return"){
         returnval = "";
         string wf = splitstrcount(expression, ' ', 1)[1];
         returnval = getExpressionVal(wf);
+
+        return 960;
     }
     else{
         return 1;
