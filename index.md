@@ -1,6 +1,5 @@
-# Hello, World!
-
-This is mayonnaise, an interpreted language written from scratch.
+# Quick Look
+Hello, World! This is mayonnaise, an interpreted language written from scratch.
 
 Let's take a quick look.
 
