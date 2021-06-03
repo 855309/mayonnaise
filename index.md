@@ -52,7 +52,7 @@ enddef
 ```
 
 ## Built-in functions
-There is some essential built-in functions like **log** or **construct**.
+There is some essential built-in functions like **log**, **stdin** or **construct**.
 The other functions can be found in the [Documentation](docs).
 
 ### log
@@ -74,6 +74,24 @@ log("World!")
 **Output:**
 ```
 Hello, World!
+```
+
+### stdin
+This function gets data from stdin. (std::cin type)
+
+Quick Example:
+```ruby
+a = stdin()
+log(a)
+```
+
+### readin
+This function gets data from stdin. (std::readline type)
+
+Quick Example:
+```ruby
+a = readin()
+log(a)
 ```
 
 ### construct (BETA)
