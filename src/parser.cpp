@@ -6,6 +6,7 @@ using namespace std;
 
 #include "parser.hpp"
 #include "strh.hpp"
+#include "construct.hpp"
 
 string trimToDelimiterNonStr(string origin, char del){
     string ext = "";
@@ -131,4 +132,19 @@ vector<string> parseFunctionArgs(string exp){ // func(1, "a", 47, 8 + 99)
     }
 
     return args;
+}
+
+generictype parseGenericType(string exp){
+    vector<string> parts = splitstrcount(exp, ':', 1);
+
+    if(parts[0] == "type"){
+        if(parts[1] == "struct"){
+            return generictype::mstruct;
+        }
+        else if(parts[1] == "class"){
+            return generictype::mclass;
+        }
+    }
+
+    return generictype::none;
 }

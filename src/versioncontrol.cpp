@@ -2,5 +2,5 @@
 using namespace std;
 
 string getVer(){
-    return "1.3-pre.begin";
+    return "1.4-alpha";
 }

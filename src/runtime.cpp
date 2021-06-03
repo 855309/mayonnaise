@@ -18,37 +18,6 @@ using namespace std;
 #include "runtime.hpp"
 using namespace exprtk;
 
-struct mvariable{
-    string name;
-    string value;
-};
-
-struct forblock{
-    string exp;
-    vector<string> code;
-};
-
-struct rangeobj{
-    int start;
-    int end;
-};
-
-struct rangeloopblock{
-    rangeobj range;
-    string var;
-    vector<string> code;
-};
-
-struct ifblock{
-    string exp;
-    vector<string> code;
-};
-
-struct mfunction{
-    string name;
-    vector<string> code;
-};
-
 vector<char> prohibitedChars = {' ', '(', ')', '[', ']', '*', ',', '.', '='};
 vector<mvariable> variables;
 vector<mfunction> functions;

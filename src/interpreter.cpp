@@ -10,6 +10,7 @@ using namespace replxx;
 #include "runtime.hpp"
 #include "file.hpp"
 #include "versioncontrol.hpp"
+#include "error.hpp"
 
 #pragma region Interpreter Definitions
 string mayoVer = getVer();
@@ -76,9 +77,7 @@ void execFile(string file){
         string cline = trim(lines[li - 1]);
         if(cline != ""){
             int code = executeExpression(cline);
-            if(code != 0 && code != 1000){
-                cerr << file << ":" << li << " Unrecognizable code block. Error code: " << code << endl;
-            }
+            handleError(code);
         }
     }
 }
