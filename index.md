@@ -183,5 +183,3 @@ endrange
 ```
 
 [Documentation](docs)
-
-Author: [fikret0](https://github.com/fikret0)
