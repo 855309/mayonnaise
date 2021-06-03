@@ -7,7 +7,7 @@ using namespace std;
 using namespace replxx;
 
 #include "strh.hpp"
-#include "command.hpp"
+#include "runtime.hpp"
 #include "file.hpp"
 #include "versioncontrol.hpp"
 
@@ -83,6 +83,7 @@ void execFile(string file){
     }
 }
 
+// !! ENTRY POINT !!
 int main(int argc, char** argv){
     if(argc > 1){
         execFile(argv[1]);

@@ -15,6 +15,7 @@ using namespace std;
 #include "parser.hpp"
 #include "../lib/exprtk.hpp"
 #include "builtin.hpp"
+#include "runtime.hpp"
 using namespace exprtk;
 
 struct mvariable{
@@ -375,6 +376,10 @@ void execRangeLoop(rangeloopblock block){
 }
 
 int executeExpression(string fexp){
+    if(trim(fexp)[0] == '#'){
+        return 0;
+    }
+    
     string expression = trim(trimToDelimiterNonStr(fexp, commentDel));
     /*cout << expression << endl;
     return 0;*/

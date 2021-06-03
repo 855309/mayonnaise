@@ -22,8 +22,14 @@ vector<string> commands = {  // built-in command list
     // string operations
     "strconcat",
     "strcmp",
-    "streq"
+    "streq",
+
+    // IMPORTANT CONSTRUCTORS!!!
+    "construct"
 };
+
+// command include
+#include "construct.hpp"
 
 bool builtinEx(string cm){
     for(string c : commands){
@@ -113,6 +119,9 @@ string execbuiltin(string funcname, vector<string> args){
         }
 
         return "true";
+    }
+    else if(funcname == "construct"){
+        construct(args);
     }
 
     return "0";
