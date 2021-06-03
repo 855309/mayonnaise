@@ -1,7 +1,7 @@
 # Quick Look
 Hello, World! This is [**mayonnaise**](https://github.com/fikret0/mayonnaise), an **interpreted programming language** written from scratch.
 
-Let's take a quick look.
+Let's take a quick look :yum:.
 
 # Variables
 
