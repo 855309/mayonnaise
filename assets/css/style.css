@@ -1,4 +1,4 @@
-@import "{{ site.theme }}";
+@import "jekyll-theme-cayman";
 
 .highlight table td { padding: 5px; }
 .highlight table pre { margin: 0; }
