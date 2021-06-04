@@ -3,13 +3,14 @@
 #include <map>
 using namespace std;
 
-// structures
+// Generic type.
 enum generictype{
     none = 0,
     mstruct = 1,
     mclass = 2
 };
 
+// Simple generic block.
 struct genericblock{
     generictype type;
     string name;
@@ -18,3 +19,7 @@ struct genericblock{
 
 // functions
 void construct(vector<string> args);
+void setStructureVal(string objname, string membername);
+
+// callback
+vector<genericblock*> getGenericStructures();

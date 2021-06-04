@@ -2,7 +2,7 @@
 #include <string>
 using namespace std;
 
-#include "construct.hpp"
+// #include "construct.hpp"
 #include "parser.hpp"
 #include "error.hpp"
 
@@ -20,6 +20,21 @@ vector<genericblock*> genericStructures;
 
 vector<genericblock*> getGenericStructures(){
     return genericStructures;
+}
+
+void setStructureVal(string objname, string membername, string memberval){
+    for(genericblock* block : genericStructures){
+        if(block->name == objname){
+            for(int f = 0; f < block->members.size(); f++){
+                if(block->members[f].first == membername){
+                    block->members[f].second = memberval;
+                    return;
+                }
+            }
+        }
+    }
+
+    handleError(3); // no generic member found
 }
 
 void construct(vector<string> args){

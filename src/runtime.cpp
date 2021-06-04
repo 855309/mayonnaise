@@ -80,7 +80,6 @@ bool getBoolVal(string exp){
     }
 }
 
-
 string getVarVal(string name){ // YaAllahu38
     for(mvariable v : variables){
         if(v.name == name){

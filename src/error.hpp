@@ -2,4 +2,4 @@
 #include <string>
 using namespace std;
 
-void handleError(int code = 1);
+void handleError(int code);

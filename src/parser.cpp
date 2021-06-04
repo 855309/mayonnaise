@@ -6,7 +6,7 @@ using namespace std;
 
 #include "parser.hpp"
 #include "strh.hpp"
-#include "construct.hpp"
+// #include "construct.hpp" (np with parser.hpp)
 
 string trimToDelimiterNonStr(string origin, char del){
     string ext = "";
@@ -147,4 +147,25 @@ generictype parseGenericType(string exp){
     }
 
     return generictype::none;
+}
+
+bool isGettingStructVal(string exp){
+    vector<string> pts = splitstr(exp, '.');
+    if(trim(pts[1]) == ""){
+        return false;
+    }
+
+    auto blocks = getGenericStructures();
+
+    for(auto block : blocks){
+        if(pts[0] == block->name){
+            for(auto member : block->members){
+                if(pts[1] == member.first){
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
 }

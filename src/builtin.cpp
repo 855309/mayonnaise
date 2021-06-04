@@ -28,8 +28,8 @@ vector<string> commands = {  // built-in command list
     "construct"
 };
 
-// command include
-#include "construct.hpp"
+// command include (no problem with parser.hpp)
+// #include "construct.hpp"
 
 bool builtinEx(string cm){
     for(string c : commands){

@@ -7,7 +7,7 @@ using namespace std;
 
 vector<int> nonErrorCodes = { 0, 1000 };
 
-void handleError(int code = 1){
+void handleError(int code){
     for(int ec : nonErrorCodes){
         if(ec == code){
             return;
@@ -22,8 +22,11 @@ void handleError(int code = 1){
     else if(code == 2){
         errorMessage = "Generic type failure.";
     }
+    else if(code == 3){
+        errorMessage == "No generic member found with given name.";
+    }
 
-    cerr << " Error code: " << code << endl;
+    cerr << errorMessage << " Error code: " << code << endl;
 
     exit(code); // exit the program after writing the failure to stderr
 }
