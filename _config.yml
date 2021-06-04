@@ -2,4 +2,4 @@ theme: jekyll-theme-cayman
 highlighter: rouge
 kramdown:
   syntax_highlighter: rouge
-  input: GFM
+  # input: GFM
