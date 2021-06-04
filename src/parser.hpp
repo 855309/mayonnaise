@@ -6,8 +6,8 @@ using namespace std;
 
 string parseAndExecuteFunction(string exp);
 vector<string> parseFunctionArgs(string exp);
-bool convertBool(string exp);
+bool convertBool(const string& exp);
 double todouble(string vl);
-string getExceptStr(string exp);
+string getExceptStr(const string& exp);
 string trimToDelimiterNonStr(string origin, char del);
 generictype parseGenericType(string exp);

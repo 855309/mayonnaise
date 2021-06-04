@@ -3,6 +3,13 @@
 #include <map>
 using namespace std;
 
+// Basic value block.
+// Members: name, value.
+struct valueblock{
+    string name;
+    string value;
+};
+
 // Generic type.
 enum generictype{
     none = 0,
@@ -14,7 +21,7 @@ enum generictype{
 struct genericblock{
     generictype type;
     string name;
-    vector<pair<string, string>> members;
+    vector<valueblock*> members;
 };
 
 // functions

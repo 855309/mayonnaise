@@ -1,5 +1,6 @@
 #include <vector>
 #include <string>
+#include <iostream> // for debugging
 using namespace std;
 
 // #include "construct.hpp"
@@ -25,9 +26,9 @@ vector<genericblock*> getGenericStructures(){
 void setStructureVal(string objname, string membername, string memberval){
     for(genericblock* block : genericStructures){
         if(block->name == objname){
-            for(int f = 0; f < block->members.size(); f++){
-                if(block->members[f].first == membername){
-                    block->members[f].second = memberval;
+            for(auto& member : block->members){
+                if(member->name == membername){
+                    member->value = memberval;
                     return;
                 }
             }
@@ -39,7 +40,7 @@ void setStructureVal(string objname, string membername, string memberval){
 
 void construct(vector<string> args){
     try{
-        string defvalue = "";
+        string defvalue = "type:undefined";
 
         genericblock* block;
         
@@ -53,8 +54,22 @@ void construct(vector<string> args){
         block->type = t;
         block->name = args[1];
 
+        cout << block->type << " " << block->name << endl;
+
         for(int i = 2; i < args.size(); i++){
-            block->members.push_back(pair<string, string>(args[i], defvalue));
+            /* valueblock vb = {
+                .name = args[i],
+                .value = defvalue
+            }; */
+
+            valueblock* vb;
+
+            vb->name = args[i];
+            vb->value = defvalue;
+
+            block->members.push_back(vb);
+
+            cout << vb->name << " " << vb->value << endl;
         }
 
         genericStructures.push_back(block);

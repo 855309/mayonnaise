@@ -105,8 +105,8 @@ string parseAndExecuteFunction(string exp){
     vector<string> srr = splitstrcount(exp, '(', 1);
     string funcname = srr[0];
     vector<string> args = parseFunctionArgs(exp);
-    for(int i = 0; i < args.size(); i++){
-        args[i] = getExpressionVal(args[i]);
+    for(auto & arg : args){
+        arg = getExpressionVal(arg);
         
         /*if(isArithmetic(args[i])){
             args[i] = getArithmeticVal(args[i]);

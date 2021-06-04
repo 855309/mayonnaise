@@ -33,7 +33,7 @@ string trimToDelimiterNonStr(string origin, char del){
     return ext;
 }
 
-string getExceptStr(string exp){
+string getExceptStr(const string& exp){
     string sn = "";
     
     bool ins = false;
@@ -54,7 +54,7 @@ string getExceptStr(string exp){
     return sn;
 }
 
-bool convertBool(string exp){
+bool convertBool(const string& exp){
     stringstream st;
     st << exp;
     bool s;
@@ -151,7 +151,8 @@ generictype parseGenericType(string exp){
 
 bool isGettingStructVal(string exp){
     vector<string> pts = splitstr(exp, '.');
-    if(trim(pts[1]) == ""){
+
+    if(trim(pts[1]).empty() || trim(pts[0]).empty()){
         return false;
     }
 
@@ -159,8 +160,8 @@ bool isGettingStructVal(string exp){
 
     for(auto block : blocks){
         if(pts[0] == block->name){
-            for(auto member : block->members){
-                if(pts[1] == member.first){
+            for(auto& member : block->members){
+                if(pts[1] == member->value){
                     return true;
                 }
             }

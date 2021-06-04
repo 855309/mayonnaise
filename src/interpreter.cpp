@@ -2,9 +2,9 @@
 #include <string>
 #include <iostream>
 #include <sstream>
-#include <replxx.hxx>
+// #include <replxx.hxx>
 using namespace std;
-using namespace replxx;
+// using namespace replxx;
 
 #include "strh.hpp"
 #include "runtime.hpp"
@@ -16,7 +16,7 @@ using namespace replxx;
 string mayoVer = getVer();
 #pragma endregion
 
-Replxx inp;
+// Replxx inp;
 
 std::string ver_string(int a, int b, int c) {
     std::ostringstream ss;
@@ -24,7 +24,7 @@ std::string ver_string(int a, int b, int c) {
     return ss.str();
 }
 
-void startInterpreter(){
+[[noreturn]] void startInterpreter(){
     cout << "Mayonnaise " << mayoVer << " (Copyright 2021 - fikret0)" << endl;
 
     string true_cxx =
@@ -47,14 +47,14 @@ void startInterpreter(){
     string mulinpstr = ".. ";
     string inpstr = definpstr;
 
-    while (1){ // input loop (interpreter)
-        //cout << inpstr;
-        string userinp = "";
-        //getline(cin, userinp);
-        userinp = inp.input(inpstr);
+    while (true){ // input loop (interpreter)
+        cout << inpstr;
+        string userinp;
+        getline(cin, userinp);
+        //userinp = inp.input(inpstr);
         userinp = trim(userinp);
 
-        if(userinp != ""){
+        if(!userinp.empty()){
             int code = executeExpression(userinp);
             if(code == 1000){
                 inpstr = mulinpstr;
@@ -66,7 +66,7 @@ void startInterpreter(){
                 }
             }
 
-            inp.history_add(userinp);
+            // inp.history_add(userinp);
         }
     }
 }
@@ -75,7 +75,7 @@ void execFile(string file){
     vector<string> lines = ReadAllLines(file);
     for(int li = 1; li <= lines.size(); li++){
         string cline = trim(lines[li - 1]);
-        if(cline != ""){
+        if(!cline.empty()){
             int code = executeExpression(cline);
             handleError(code);
         }
