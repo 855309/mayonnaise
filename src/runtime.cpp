@@ -34,7 +34,7 @@ int executeExpression(string expression);
 
 string getExpressionVal(string exp);
 
-#pragma endregion // allaj88
+#pragma endregion
 
 string getArithmeticVal(string aexpr){
     symbol_table<double> symbol_table;
@@ -80,7 +80,7 @@ bool getBoolVal(string exp){
     }
 }
 
-string getVarVal(string name){ // YaAllahu38
+string getVarVal(string name){ 
     for(mvariable v : variables){
         if(v.name == name){
             return v.value;
@@ -111,7 +111,7 @@ string parseAndExecuteFunction(string exp){
         /*if(isArithmetic(args[i])){
             args[i] = getArithmeticVal(args[i]);
         }
-                                                        // BISMILLAHIRAHMANI-ALLAH
+
         for(mvariable var : variables){
             if(args[i] == var.name){
                 args[i] = var.value;
@@ -177,7 +177,7 @@ bool identifierValid(string idf){
     }
 
     for(char c : trim(idf)){
-        for(char pb : prohibitedChars){ // beler alaj iste burda
+        for(char pb : prohibitedChars){
             if(pb == c){
                 return false; // au44
             }
@@ -229,8 +229,8 @@ bool isFunction(string exp){
     }
 
     if(!fnd1 && !fnd2){
-        return false; // pardon ama lavasa sarip yedim
-    }                 // elimde degil abi
+        return false;
+    }
 
     vector<string> leftprp = splitstrcount(exp, '(', 1);
     vector<string> rightprp = splitstrcount(exp, ')', 1);
