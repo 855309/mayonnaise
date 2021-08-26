@@ -34,6 +34,23 @@ int executeExpression(string expression);
 
 string getExpressionVal(string exp);
 
+int setVarRaw(mvariable var);
+
+string getVarVal(string name);
+
+bool varExists(string name);
+
+/* arr_ */
+
+string arr_create(vector<string> args);
+string arr_append(vector<string> args);
+string arr_clear(vector<string> args);
+string arr_change(vector<string> args);
+string arr_size(vector<string> args);
+string index(vector<string> args);
+
+/* end */
+
 #pragma endregion
 
 string getArithmeticVal(string aexpr){
@@ -61,13 +78,257 @@ string getArithmeticVal(string aexpr){
     return to_string(val);
 }
 
-// BELER LIBRARY YA KUSURA BAKMA
+vector<string> runtimeCommands = {
+    "arr_create",
+    "arr_append",
+    "arr_clear",
+    "arr_change",
+    "arr_size",
+    "index",
+    
+    // str_array functions
+    "str_arrayize"
+};
+
+bool controlRuntimeCommands(string cmd){
+    for(string c : runtimeCommands){
+        if(c == cmd){
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// arr_
+
+string arr_create(vector<string> args){
+    // exmp:
+    // "{arr: 1, 2, 3, 4}"
+
+    string arrstr = "{arr: ";
+    for(int ind = 0; ind < args.size(); ind++){
+        string arg = args[ind];
+        arrstr += arg;
+
+        if(ind != args.size() - 1){
+            arrstr += ", ";
+        }
+    }
+
+    arrstr += "}";
+
+    return arrstr;
+}
+
+string arr_append(vector<string> args){
+    string arrptr = args[0];
+    string arrnm = arrptr.substr(1, arrptr.size() - 1);
+
+    if(arrptr[0] != '&'){
+        return "PTR Error";
+    }
+
+    string arrv = getVarVal(arrnm);
+    arrv = arrv.substr(0, arrv.size() - 1);
+
+    if(arr_size({ args[0] }) != "0"){
+        arrv += ", ";
+    }
+
+    for(int ind = 1; ind < args.size(); ind++){
+        string arg = args[ind];
+        arrv += arg;
+
+        if(ind != args.size() - 1){
+            arrv += ", ";
+        }
+    }
+
+    arrv += "}";
+
+    mvariable v = {
+        .name = arrnm,
+        .value = arrv
+    };
+
+    setVarRaw(v);
+
+    return "1";
+}
+
+string arr_change(vector<string> args){
+    string arrptr = args[0];
+    string arrnm = arrptr.substr(1, arrptr.size() - 1);
+
+    int target = stoi(args[1]);
+
+    if(arrptr[0] != '&'){
+        return "PTR Error";
+    }
+
+    string arrv = getVarVal(arrnm);
+    arrv = arrv.substr(0, arrv.size() - 1);
+
+    string vecst = trim(splitstrcount(arrv, ':', 1)[1]);
+
+    mvariable outputarr;
+
+    outputarr.name = arrnm;
+    outputarr.value = "{arr: ";
+
+    vector<string> arrvalues = splitstr(vecst, ',');
+    for(int idx = 0; idx < arrvalues.size(); idx++){
+        if(target == idx){
+            arrvalues[idx] = args[2];
+        }
+
+        arrvalues[idx] = trim(arrvalues[idx]);
+
+        outputarr.value += arrvalues[idx];
+
+        if(idx != arrvalues.size() - 1){
+            outputarr.value += ", ";
+        }
+    }
+
+    outputarr.value += "}";
+
+    setVarRaw(outputarr);
+
+    return "1";
+}
+
+string arr_clear(vector<string> args){
+    string arrptr = args[0];
+    string arrnm = arrptr.substr(1, arrptr.size() - 1);
+
+    if(arrptr[0] != '&'){
+        return "PTR Error";
+    }
+
+    mvariable v = {
+        .name = arrnm,
+        .value = "{arr: }"
+    };
+
+    setVarRaw(v);
+
+    return "1";
+}
+
+string index(vector<string> args){
+    string arrptr = args[0];
+    string arrnm = arrptr.substr(1, arrptr.size() - 1);
+
+    if(arrptr[0] != '&'){
+        return "PTR Error";
+    }
+
+    string arrv = getVarVal(arrnm);
+    arrv = arrv.substr(0, arrv.size() - 1);
+
+    string vecst = trim(splitstrcount(arrv, ':', 1)[1]);
+
+    vector<string> arrvalues = splitstr(vecst, ',');
+    for(int idx = 0; idx < arrvalues.size(); idx++){
+        arrvalues[idx] = trim(arrvalues[idx]);
+    }
+
+    string fsx = trim(arrvalues[stoi(args[1])]);
+
+    if((fsx[0] == '\"' && fsx.back() == '\"') || (fsx[0] == '\'' && fsx.back() == '\'')){
+        fsx = fsx.substr(1, fsx.size() - 2);
+    }
+
+    return fsx;
+}
+
+string arr_size(vector<string> args){
+    string arrptr = args[0];
+    string arrnm = arrptr.substr(1, arrptr.size() - 1);
+
+    if(arrptr[0] != '&'){
+        return "PTR Error";
+    }
+
+    string arrv = getVarVal(arrnm);
+    arrv = arrv.substr(0, arrv.size() - 1);
+
+    string vecst = trim(splitstrcount(arrv, ':', 1)[1]);
+
+    vector<string> arrvalues = splitstr(vecst, ',');
+
+    int s = arrvalues.size();
+
+    if(s == 1){
+        if(arrvalues[0].empty()){
+            return to_string(0);
+        }
+    }
+
+    return to_string(s);
+}
+
+// arr_ end
+
+// str_arr
+
+string str_arrayize(vector<string> args){
+    string x = args[0];
+
+    string out = "{arr: ";
+    for(int ci = 0; ci < x.size(); ci++){
+        out += "\"";
+        out += x[ci];
+        out += "\"";
+
+        if(ci != x.size() - 1){
+            out += ", ";
+        }
+    }
+
+    out += "}";
+
+    return out;
+}
+
+string execRuntime(string cmd, vector<string> args){
+    if(cmd == "arr_create"){
+        return arr_create(args);
+    }
+    else if(cmd == "arr_append"){
+        return arr_append(args);
+    }
+    else if(cmd == "arr_clear"){
+        return arr_clear(args);
+    }
+    else if(cmd == "index"){
+        return index(args);
+    }
+    else if(cmd == "arr_size"){
+        return arr_size(args);
+    }
+    else if(cmd == "arr_change"){
+        return arr_change(args);
+    }
+    else if(cmd == "str_arrayize"){
+        return str_arrayize(args);
+    }
+
+    return "0";
+}
+
 bool getBoolVal(string exp){
     if(exp == "true"){
         return true;
     }
     else if(exp == "false"){
         return false;
+    }
+    else if(varExists(exp) || isFunction(exp)){
+        string val = getExpressionVal(exp);
+        return getBoolVal(val);
     }
     else{
         string arrVal = getArithmeticVal(exp);
@@ -80,14 +341,14 @@ bool getBoolVal(string exp){
     }
 }
 
-string getVarVal(string name){ 
+string getVarVal(string name){
     for(mvariable v : variables){
         if(v.name == name){
             return v.value;
         }
     }
 
-    return ""; // bi hata var
+    return "sj"; // bi hata var
 }
 
 bool varExists(string name){
@@ -133,6 +394,10 @@ string parseAndExecuteFunction(string exp){
 
     if(builtinEx(funcname)){
         return execbuiltin(funcname, args);
+    }
+
+    if(controlRuntimeCommands(funcname)){
+        return execRuntime(funcname, args);
     }
 
     for(mfunction fn : functions){
@@ -185,6 +450,18 @@ bool identifierValid(string idf){
     }
 
     return true;
+}
+
+int setVarRaw(mvariable var){
+    for(int i = 0; i < variables.size(); i++){
+        if(variables[i].name == var.name){
+            variables[i].value = var.value;
+            return 0;
+        }
+    }
+
+    variables.push_back(var);
+    return 0;
 }
 
 int assignVar(string name, string value){

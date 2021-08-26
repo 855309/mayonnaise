@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <readline/readline.h>
 // #include <replxx.hxx>
 using namespace std;
 // using namespace replxx;
@@ -48,9 +49,8 @@ std::string ver_string(int a, int b, int c) {
     string inpstr = definpstr;
 
     while (true){ // input loop (interpreter)
-        cout << inpstr;
-        string userinp;
-        getline(cin, userinp);
+        // cout << inpstr;
+        string userinp = readline(inpstr.c_str());
         //userinp = inp.input(inpstr);
         userinp = trim(userinp);
 
